@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rantai Pasok Ekspor Katoda Tembaga Indonesia (2016–2025)</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: IBM Plex Mono & Lora -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Lora:ital,wght@0,500;0,600;1,400&display=swap" rel="stylesheet">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        paper: '#f9f9f6',
+                        paperDark: '#f0f0e8',
+                        ink: '#1a1a1a',
+                        forest: '#1b5e20',
+                        forestLight: '#2e7d32',
+                        forestSubtle: '#e8f5e9',
+                        copper: '#c2590a',
+                        copperLight: '#d97706',
+                        copperSubtle: '#fff7ed',
+                        charcoal: '#333333',
+                        muted: '#666666'
+                    },
+                    fontFamily: {
+                        mono: ['"IBM Plex Mono"', 'Courier', 'monospace'],
+                        serif: ['Lora', 'Georgia', 'serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #f9f9f6;
+            color: #1a1a1a;
+            font-family: 'IBM Plex Mono', monospace;
+        }
+        /* Style scrollbar custom editorial */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f0f0e8;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1b5e20;
+            border-radius: 3px;
+        }
+        /* Custom tab animation underline */
+        .tab-btn {
+            position: relative;
+            transition: all 0.2s ease;
+        }
+        .tab-btn.active {
+            color: #1b5e20;
+            font-weight: 700;
+            background-color: #ffffff;
+            border-bottom: 3px solid #1b5e20;
+        }
+        /* Touch scroll snap support for horizontal charts/tables */
+        .touch-scroll {
+            -webkit-overflow-scrolling: touch;
+        }
+        /* Print optimization */
+        @media print {
+            .no-print { display: none !important; }
+            body { background: white; }
+        }
+    </style>
+</head>
+<body class="p-3 sm:p-6 md:p-8 min-h-screen flex flex-col justify-between selection:bg-forest selection:text-white">
+
+    <!-- CONTAINER UTAMA -->
+    <div class="max-w-7xl mx-auto w-full space-y-6">
+
+        <!-- EDITORIAL HEADER MONGABAY STYLE -->
+        <header class="border-b-2 border-forest pb-5 space-y-3">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+                <span class="inline-block bg-forest text-white text-xs px-2.5 py-1 uppercase tracking-widest font-semibold rounded-sm">
+                    MONGABAY DATA INVESTIGASI • EKONOMIK LINGKUNGAN
+                </span>
+                <span class="text-xs text-muted font-mono">
+                    Kode HS 740311 • Data UN Comtrade (2016–2025)
+                </span>
+            </div>
+            <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold font-serif text-ink leading-tight">
+                Rantai Pasok Ekspor Katoda Tembaga Indonesia (2016–2025)
+            </h1>
+            <p class="text-sm sm:text-base text-charcoal font-serif italic max-w-4xl">
+                Analisis hilirisasi tembaga murni (<span class="font-mono not-italic font-semibold text-copper">Refined Copper Cathodes</span>) mencatat total volume 1,82 juta ton senilai US$ 13,91 miliar ke 16 negara tujuan, dengan konsentrasi tinggi di hub manufaktur Asia.
+            </p>
+        </header>
+
+        <!-- KPI CARDS WITH COUNTER ANIMATION -->
+        <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <!-- KPI 1 -->
+            <div class="bg-white border border-gray-300 p-4 rounded-md shadow-sm border-l-4 border-l-forest hover:shadow-md transition-shadow">
+                <div class="text-xs font-mono uppercase text-muted tracking-wider">Total Volume 10 Thn</div>
+                <div class="text-2xl sm:text-3xl font-bold font-mono text-forest mt-1 flex items-baseline">
+                    <span id="kpi-vol">0</span> <span class="text-xs font-normal text-gray-500 ml-1">Ton</span>
+                </div>
+                <div class="text-xs text-forestLight font-semibold mt-1">CAGR Volume +4,36% / thn</div>
+            </div>
+
+            <!-- KPI 2 -->
+            <div class="bg-white border border-gray-300 p-4 rounded-md shadow-sm border-l-4 border-l-copper hover:shadow-md transition-shadow">
+                <div class="text-xs font-mono uppercase text-muted tracking-wider">Total Nilai FOB</div>
+                <div class="text-2xl sm:text-3xl font-bold font-mono text-copper mt-1 flex items-baseline">
+                    US$ <span id="kpi-fob">0</span> <span class="text-xs font-normal text-gray-500 ml-1">Miliar</span>
+                </div>
+                <div class="text-xs text-copperLight font-semibold mt-1">CAGR Nilai +12,85% / thn</div>
+            </div>
+
+            <!-- KPI 3 -->
+            <div class="bg-white border border-gray-300 p-4 rounded-md shadow-sm border-l-4 border-l-forest hover:shadow-md transition-shadow">
+                <div class="text-xs font-mono uppercase text-muted tracking-wider">Porsi 5 Hub Utama Asia</div>
+                <div class="text-2xl sm:text-3xl font-bold font-mono text-forest mt-1">
+                    <span id="kpi-hub">0</span>%
+                </div>
+                <div class="text-xs text-muted truncate mt-1" title="Malaysia, Tiongkok, Vietnam, Thailand, Taiwan">MY, CN, VN, TH, TW</div>
+            </div>
+
+            <!-- KPI 4 -->
+            <div class="bg-white border border-gray-300 p-4 rounded-md shadow-sm border-l-4 border-l-copper hover:shadow-md transition-shadow">
+                <div class="text-xs font-mono uppercase text-muted tracking-wider">Rekor Ekspor 2025</div>
+                <div class="text-2xl sm:text-3xl font-bold font-mono text-copper mt-1 flex items-baseline">
+                    <span id="kpi-2025">0</span> <span class="text-xs font-normal text-gray-500 ml-1">Ton</span>
+                </div>
+                <div class="text-xs text-muted mt-1">US$ 2,33 M | US$ 9.885/ton</div>
+            </div>
+        </section>
+
+        <!-- MAIN INTERACTIVE SECTION WITH TABS -->
+        <main class="bg-white border border-gray-300 rounded-md shadow-sm overflow-hidden">
+            <!-- TAB BUTTONS -->
+            <div class="flex border-b border-gray-200 bg-paperDark touch-scroll overflow-x-auto">
+                <button onclick="switchTab('tab1')" id="btn-tab1" class="tab-btn active px-4 sm:px-6 py-3 text-xs sm:text-sm font-mono uppercase tracking-wider whitespace-nowrap focus:outline-none">
+                    📈 1. Tren Tahunan (2016–2025)
+                </button>
+                <button onclick="switchTab('tab2')" id="btn-tab2" class="tab-btn px-4 sm:px-6 py-3 text-xs sm:text-sm font-mono uppercase tracking-wider whitespace-nowrap text-muted hover:text-ink focus:outline-none">
+                    📊 2. Peta Tujuan & Pangsa
+                </button>
+                <button onclick="switchTab('tab3')" id="btn-tab3" class="tab-btn px-4 sm:px-6 py-3 text-xs sm:text-sm font-mono uppercase tracking-wider whitespace-nowrap text-muted hover:text-ink focus:outline-none">
+                    🏆 3. Peringkat 16 Negara
+                </button>
+            </div>
+
+            <div class="p-4 sm:p-6">
+                <!-- TAB 1 CONTENT -->
+                <section id="tab1" class="space-y-4">
+                    <div class="flex flex-wrap items-center justify-between gap-3 bg-paper p-3 rounded border border-gray-200">
+                        <div>
+                            <h2 class="text-sm font-bold font-mono text-forest uppercase">Dinamika Volume, Nilai FOB & Harga Satuan</h2>
+                            <p class="text-xs text-muted font-serif">Pilih tampilan grafik kombinasi atau evolusi harga per ton.</p>
+                        </div>
+                        <div class="inline-flex rounded-md shadow-sm" role="group">
+                            <button onclick="setTab1Metric('combo')" id="btn-t1-combo" class="px-3 py-1.5 text-xs font-mono font-semibold bg-forest text-white rounded-l border border-forest">
+                                Volume & Nilai
+                            </button>
+                            <button onclick="setTab1Metric('price')" id="btn-t1-price" class="px-3 py-1.5 text-xs font-mono font-semibold bg-white text-ink rounded-r border border-gray-300 hover:bg-gray-100">
+                                Harga Satuan (US$/Ton)
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Canvas Container Chart 1 -->
+                    <div class="relative w-full h-[360px] sm:h-[420px]">
+                        <canvas id="chartTab1"></canvas>
+                    </div>
+
+                    <!-- Informational Callout Tab 1 -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3 pt-2 text-xs font-serif">
+                        <div class="p-3 bg-forestSubtle rounded border border-forestLight/30 text-forest">
+                            <strong class="font-mono block text-xs uppercase mb-1">Fase Ekspansi (2016-2020)</strong>
+                            Volume stabil di kisaran 150-200 ribu ton/tahun. Harga rata-rata berada pada titik terendah US$ 4.890/ton (2016) dan bergerak hingga US$ 5.992/ton (2020).
+                        </div>
+                        <div class="p-3 bg-copperSubtle rounded border border-copper/30 text-copper">
+                            <strong class="font-mono block text-xs uppercase mb-1">Siklus Rendah 2023</strong>
+                            Ekspor sempat merosot tajam ke titik terendah 115.361 ton (turun 37.8% YoY) akibat siklus perbaikan smelter sebelum operasionalitas fasilitas hilir baru.
+                        </div>
+                        <div class="p-3 bg-forestSubtle rounded border border-forestLight/30 text-forest">
+                            <strong class="font-mono block text-xs uppercase mb-1">Rekor Hilirisasi 2024–2025</strong>
+                            Volume melonjak +91,6% pada 2024 (221.006 ton) dan kembali mencetak rekor 235.670 ton pada 2025 dengan harga puncak US$ 9.885/ton.
+                        </div>
+                    </div>
+                </section>
+
+                <!-- TAB 2 CONTENT -->
+                <section id="tab2" class="space-y-4 hidden">
+                    <div class="flex flex-wrap items-center justify-between gap-3 bg-paper p-3 rounded border border-gray-200">
+                        <div>
+                            <h2 class="text-sm font-bold font-mono text-forest uppercase">Komposisi Negara Tujuan Utama (Stacked Bar)</h2>
+                            <p class="text-xs text-muted font-serif">Alihkan antara Volume (Ton), Nilai (Juta US$), atau Persentase Pangsa (%).</p>
+                        </div>
+                        <div class="inline-flex rounded-md shadow-sm" role="group">
+                            <button onclick="setTab2Metric('vol')" id="btn-t2-vol" class="px-3 py-1.5 text-xs font-mono font-semibold bg-forest text-white rounded-l border border-forest">
+                                Volume (Ton)
+                            </button>
+                            <button onclick="setTab2Metric('fob')" id="btn-t2-fob" class="px-3 py-1.5 text-xs font-mono font-semibold bg-white text-ink border-t border-b border-gray-300 hover:bg-gray-100">
+                                Nilai (US$ M)
+                            </button>
+                            <button onclick="setTab2Metric('pct')" id="btn-t2-pct" class="px-3 py-1.5 text-xs font-mono font-semibold bg-white text-ink rounded-r border border-gray-300 hover:bg-gray-100">
+                                Pangsa (%)
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Canvas Container Chart 2 -->
+                    <div class="relative w-full h-[360px] sm:h-[420px]">
+                        <canvas id="chartTab2"></canvas>
+                    </div>
+
+                    <p class="text-xs text-muted font-serif italic text-center">
+                        * Catatan: "Taiwan" dicatat dalam klasifikasi resmi Comtrade sebagai <span class="font-mono">Other Asia, nes (S19)</span>. Negara Lainnya menggabungkan 10 pasar sekunder (KOR, JPN, SGP, FIN, IND, ESP, PAK, HKG, ITA, USA, AUS).
+                    </p>
+                </section>
+
+                <!-- TAB 3 CONTENT -->
+                <section id="tab3" class="space-y-6 hidden">
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                        <!-- Horizontal Bar Chart Top Countries -->
+                        <div class="lg:col-span-5 space-y-3">
+                            <h2 class="text-sm font-bold font-mono text-forest uppercase border-b pb-2 border-gray-200">
+                                Peringkat Volume Kumulatif (10 Tahun)
+                            </h2>
+                            <div class="relative w-full h-[420px]">
+                                <canvas id="chartTab3"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Data Table -->
+                        <div class="lg:col-span-7 space-y-3">
+                            <div class="flex flex-wrap items-center justify-between gap-2 border-b pb-2 border-gray-200">
+                                <h2 class="text-sm font-bold font-mono text-forest uppercase">
+                                    Tabel Rincian 16 Negara Mitra
+                                </h2>
+                                <input type="text" id="tableSearch" onkeyup="filterTable()" placeholder="Cari negara..." class="text-xs font-mono px-3 py-1 border border-gray-300 rounded focus:outline-none focus:border-forest w-36 sm:w-48">
+                            </div>
+
+                            <div class="overflow-x-auto max-h-[380px] touch-scroll border border-gray-200 rounded">
+                                <table class="w-full text-left text-xs font-mono" id="countriesTable">
+                                    <thead class="bg-paperDark sticky top-0 border-b border-gray-300 text-ink">
+                                        <tr>
+                                            <th class="p-2 cursor-pointer hover:text-forest" onclick="sortTable(0)">No</th>
+                                            <th class="p-2 cursor-pointer hover:text-forest" onclick="sortTable(1)">Negara</th>
+                                            <th class="p-2 text-right cursor-pointer hover:text-forest" onclick="sortTable(2)">Total Ton</th>
+                                            <th class="p-2 text-right cursor-pointer hover:text-forest" onclick="sortTable(3)">Nilai (US$ M)</th>
+                                            <th class="p-2 text-right cursor-pointer hover:text-forest" onclick="sortTable(4)">US$/Ton</th>
+                                            <th class="p-2 text-right cursor-pointer hover:text-forest" onclick="sortTable(5)">Ton (2025)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-gray-200 text-charcoal bg-white" id="tableBody">
+                                        <!-- Injected via JS -->
+                                    </tbody>
+                                </table>
+                            </div>
+                            <p class="text-[11px] text-muted font-serif">
+                                Tips: Klik header kolom pada tabel untuk mengurutkan data (Ascending/Descending).
+                            </p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+
+        <!-- SUMMARY FINDINGS / EDITORIAL ARTICLE SUMMARY -->
+        <article class="bg-white border border-gray-300 rounded-md p-5 space-y-4 font-serif text-sm leading-relaxed text-charcoal">
+            <h3 class="text-base font-bold font-mono text-forest uppercase border-b border-forest/30 pb-1">
+                Ringkasan Eksekutif & Dynamics Rantai Pasok
+            </h3>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="space-y-2">
+                    <h4 class="font-bold text-ink font-mono text-xs uppercase text-copper">1. Dominasi Oligopsoni Pasar ASEAN & Asia Timur</h4>
+                    <p>
+                        Sebanyak <strong>95,87%</strong> dari total volume ekspor katoda tembaga Indonesia diserap oleh 5 hub industri manufaktur utama: <strong>Malaysia</strong> (35,22%), <strong>Tiongkok</strong> (21,89%), <strong>Vietnam</strong> (18,23%), <strong>Thailand</strong> (15,89%), dan <strong>Taiwan</strong> (4,63%). Malaysia secara konsisten menjadi tujuan terbesar sebagai pusat penarikan kawat tembaga (<em>copper wire rod</em>) dan pergudangan LME.
+                    </p>
+                </div>
+                <div class="space-y-2">
+                    <h4 class="font-bold text-ink font-mono text-xs uppercase text-copper">2. Lonjakan Hilirisasi & Tren Rekor Harga (2024–2025)</h4>
+                    <p>
+                        Mulai 2024, ekspor katoda tembaga melonjak <strong>+91,58% YoY</strong> mencapai 221.006,8 ton dan naik lagi ke rekor tertinggi sepanjang sejarah pada 2025 sebesar <strong>235.670,5 ton</strong> senilai US$ 2,33 miliar. Hal ini sejalan dengan meningkatnya kapasitas smelter domestik serta reli harga tembaga dunia yang menembus <strong>US$ 9.885/ton</strong> pada 2025.
+                    </p>
+                </div>
+                <div class="space-y-2">
+                    <h4 class="font-bold text-ink font-mono text-xs uppercase text-copper">3. Fenomena Pembeli Baru: Korea Selatan & Finlandia</h4>
+                    <p>
+                        Pada tahun 2025, ekspor ke <strong>Korea Selatan</strong> melonjak tajam 660% YoY menjadi <strong>11.406 ton</strong> (senilai US$ 122,3 juta) dengan harga rata-rata US$ 10.722/ton untuk rantai pasok foil baterai kendaraan listrik (EV) dan semikonduktor. Sementara itu, <strong>Finlandia</strong> menjadi satu-satunya entitas Eropa yang secara reguler membeli katoda tembaga dari Indonesia (total 7.749 ton).
+                    </p>
+                </div>
+                <div class="space-y-2">
+                    <h4 class="font-bold text-ink font-mono text-xs uppercase text-copper">4. Pasar Eropa Direct vs Indirect</h4>
+                    <p>
+                        Pengiriman langsung ke Eropa hanya menyumbang <strong>0,44%</strong> (Finlandia, Spanyol, Italia). Mayoritas katoda tembaga Indonesia diolah terlebih dahulu di hub Asia Tenggara (Malaysia/Vietnam) sebelum didistribusikan ke jaringan manufaktur global atau pasar Barat.
+                    </p>
+                </div>
+            </div>
+        </article>
+
+        <!-- FOOTER -->
+        <footer class="border-t border-gray-300 pt-4 flex flex-wrap items-center justify-between gap-2 text-xs font-mono text-muted">
+            <div>
+                Sumber Data: <strong>UN Comtrade Database</strong> (Kode HS 740311 - Refined Copper Cathodes)
+            </div>
+            <div>
+                Visualisasi & Visual Data oleh <strong>Mongabay Indonesia</strong>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // === RAW DATASETS ===
+        const years = [2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025];
+        
+        const annualSummary = {
+            vol: [160439.51, 176764.15, 153771.30, 177231.78, 202844.23, 192694.71, 185466.34, 115361.62, 221006.77, 235670.49],
+            fob: [784.59, 1078.42, 1008.92, 1062.82, 1215.52, 1787.95, 1637.64, 981.49, 2018.51, 2329.59],
+            price: [4890.28, 6100.91, 6561.19, 5996.76, 5992.38, 9278.66, 8829.85, 8507.93, 9133.24, 9884.96]
+        };
+
+        const rawCountries = [
+            {
+                name: 'Malaysia', code: 'MYS', totalTon: 641450.91, totalFob: 4942.75, avgPrice: 7706,
+                ton: [60028.52, 71927.87, 63463.25, 58895.84, 33047.57, 72202.19, 85311.69, 52018.55, 77201.73, 67353.70],
+                fob: [292.01, 444.80, 417.55, 354.49, 208.66, 669.30, 756.57, 445.95, 705.37, 648.06]
+            },
+            {
+                name: 'Tiongkok', code: 'CHN', totalTon: 398703.12, totalFob: 2962.06, avgPrice: 7429,
+                ton: [13728.42, 17883.85, 32908.05, 47908.99, 108122.43, 43679.29, 24239.87, 14179.88, 38024.35, 58028.00],
+                fob: [66.69, 108.28, 214.97, 282.27, 634.39, 405.94, 205.84, 118.19, 343.23, 582.25]
+            },
+            {
+                name: 'Vietnam', code: 'VNM', totalTon: 332050.51, totalFob: 2566.59, avgPrice: 7730,
+                ton: [38229.05, 31309.20, 20344.07, 28950.55, 25431.55, 21731.58, 31505.17, 31513.66, 51903.48, 51132.20],
+                fob: [186.09, 188.96, 134.72, 174.36, 151.44, 197.14, 278.79, 271.05, 479.06, 504.99]
+            },
+            {
+                name: 'Thailand', code: 'THA', totalTon: 289464.72, totalFob: 2192.28, avgPrice: 7574,
+                ton: [30813.58, 40833.14, 24853.83, 24867.46, 24560.13, 32150.48, 35096.48, 8841.20, 34236.52, 33211.90],
+                fob: [151.30, 248.07, 162.91, 149.43, 148.61, 300.44, 314.10, 74.75, 311.52, 331.15]
+            },
+            {
+                name: 'Taiwan (S19)', code: 'TWN', totalTon: 84388.38, totalFob: 648.74, avgPrice: 7688,
+                ton: [9527.65, 7765.13, 7229.13, 9600.68, 3900.17, 10789.24, 5310.60, 4718.19, 14620.68, 10926.90],
+                fob: [46.62, 48.06, 46.10, 58.97, 25.35, 100.76, 46.86, 38.22, 132.31, 105.49]
+            },
+            {
+                name: 'Korea Selatan', code: 'KOR', totalTon: 28907.47, totalFob: 247.51, avgPrice: 8562,
+                ton: [610.02, 2183.27, 1572.96, 2708.25, 3782.36, 4442.00, 702.57, 0, 1500.02, 11406.00],
+                fob: [2.83, 11.98, 10.51, 16.02, 20.11, 42.73, 6.49, 0, 14.55, 122.30]
+            },
+            {
+                name: 'Jepang', code: 'JPN', totalTon: 19679.96, totalFob: 136.05, avgPrice: 6913,
+                ton: [2000.06, 4000.12, 3400.01, 3999.91, 0, 2699.88, 0, 1540.00, 20.00, 2019.99],
+                fob: [9.86, 24.18, 22.16, 25.53, 0, 22.60, 0, 12.20, 0.19, 19.34]
+            },
+            {
+                name: 'Singapura', code: 'SGP', totalTon: 13300.44, totalFob: 101.50, avgPrice: 7632,
+                ton: [5000.28, 0, 0, 0.09, 2000.07, 5000.04, 799.96, 300.00, 200.00, 0],
+                fob: [26.87, 0, 0, 0, 13.41, 49.04, 7.76, 2.46, 1.94, 0]
+            },
+            {
+                name: 'Finlandia', code: 'FIN', totalTon: 7749.13, totalFob: 68.08, avgPrice: 8785,
+                ton: [0, 0, 0, 300.00, 0, 0, 2499.98, 750.17, 3300.00, 899.00],
+                fob: [0, 0, 0, 1.75, 0, 0, 21.23, 6.21, 30.34, 8.55]
+            },
+            {
+                name: 'India', code: 'IND', totalTon: 5030.33, totalFob: 37.32, avgPrice: 7419,
+                ton: [198.17, 639.42, 0, 0, 1999.95, 0, 0, 1499.98, 0, 692.81],
+                fob: [0.91, 2.93, 0, 0, 13.55, 0, 0, 12.46, 0, 7.47]
+            },
+            {
+                name: 'Spanyol', code: 'ESP', totalTon: 221.95, totalFob: 1.16, avgPrice: 5205,
+                ton: [0, 221.95, 0, 0, 0, 0, 0, 0, 0, 0],
+                fob: [0, 1.16, 0, 0, 0, 0, 0, 0, 0, 0]
+            },
+            {
+                name: 'Pakistan', code: 'PAK', totalTon: 200.29, totalFob: 0.96, avgPrice: 4808,
+                ton: [200.29, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                fob: [0.96, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+            },
+            {
+                name: 'Hong Kong', code: 'HKG', totalTon: 101.78, totalFob: 0.45, avgPrice: 4417,
+                ton: [101.78, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                fob: [0.45, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+            },
+            {
+                name: 'Italia', code: 'ITA', totalTon: 1.68, totalFob: 0.01, avgPrice: 4315,
+                ton: [1.68, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                fob: [0.01, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+            },
+            {
+                name: 'Amerika Serikat', code: 'USA', totalTon: 0.21, totalFob: 0.01, avgPrice: 24995,
+                ton: [0.01, 0.20, 0, 0, 0, 0, 0, 0, 0, 0],
+                fob: [0, 0.01, 0, 0, 0, 0, 0, 0, 0, 0]
+            },
+            {
+                name: 'Australia', code: 'AUS', totalTon: 0.02, totalFob: 0.00, avgPrice: 2350,
+                ton: [0, 0, 0, 0, 0, 0, 0.02, 0, 0, 0],
+                fob: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+            }
+        ];
+
+        // Global Chart Instances
+        let chartTab1Instance = null;
+        let chartTab2Instance = null;
+        let chartTab3Instance = null;
+
+        // Colors palette for Chart.js
+        const colors = {
+            forest: '#1b5e20',
+            forestLight: '#2e7d32',
+            copper: '#c2590a',
+            copperLight: '#d97706',
+            teal: '#00695c',
+            amber: '#f59e0b',
+            slate: '#64748b',
+            paperDark: '#e2e8f0'
+        };
+
+        // Stacked colors for Tab 2
+        const countryColors = [
+            '#1b5e20', // Malaysia - Forest Green
+            '#c2590a', // Tiongkok - Copper/Amber
+            '#00695c', // Vietnam - Deep Teal
+            '#d97706', // Thailand - Warm Amber
+            '#43a047', // Taiwan - Light Green
+            '#8d6e63', // Korea Selatan - Brown Slate
+            '#9e9e9e'  // Others - Gray
+        ];
+
+        // === ANIMATED COUNTER ===
+        function animateCounters() {
+            const duration = 1200; // ms
+            const steps = 40;
+            const stepTime = duration / steps;
+
+            let step = 0;
+            const timer = setInterval(() => {
+                step++;
+                const progress = step / steps;
+                
+                // KPI 1: Volume
+                const currentVol = Math.round(1821251 * progress);
+                document.getElementById('kpi-vol').innerText = currentVol.toLocaleString('id-ID');
+
+                // KPI 2: FOB
+                const currentFob = (13.91 * progress).toFixed(2);
+                document.getElementById('kpi-fob').innerText = currentFob;
+
+                // KPI 3: Hub Share
+                const currentHub = (95.87 * progress).toFixed(2);
+                document.getElementById('kpi-hub').innerText = currentHub;
+
+                // KPI 4: 2025 Volume
+                const current2025 = Math.round(235670 * progress);
+                document.getElementById('kpi-2025').innerText = current2025.toLocaleString('id-ID');
+
+                if (step >= steps) {
+                    clearInterval(timer);
+                    document.getElementById('kpi-vol').innerText = "1.821.251";
+                    document.getElementById('kpi-fob').innerText = "13,91";
+                    document.getElementById('kpi-hub').innerText = "95,87";
+                    document.getElementById('kpi-2025').innerText = "235.670";
+                }
+            }, stepTime);
+        }
+
+        // === TAB SWITCHING LOGIC ===
+        function switchTab(tabId) {
+            ['tab1', 'tab2', 'tab3'].forEach(id => {
+                const content = document.getElementById(id);
+                const btn = document.getElementById('btn-' + id);
+                if (id === tabId) {
+                    content.classList.remove('hidden');
+                    btn.classList.add('active');
+                    btn.classList.remove('text-muted');
+                } else {
+                    content.classList.add('hidden');
+                    btn.classList.remove('active');
+                    btn.classList.add('text-muted');
+                }
+            });
+
+            // Trigger Chart renders / resizes when switching tabs
+            if (tabId === 'tab1' && !chartTab1Instance) renderChartTab1('combo');
+            if (tabId === 'tab2' && !chartTab2Instance) renderChartTab2('vol');
+            if (tabId === 'tab3') {
+                if (!chartTab3Instance) renderChartTab3();
+                populateTable();
+            }
+        }
+
+        // === TAB 1: CHARTS ===
+        function renderChartTab1(mode) {
+            const ctx = document.getElementById('chartTab1').getContext('2d');
+            if (chartTab1Instance) chartTab1Instance.destroy();
+
+            if (mode === 'combo') {
+                chartTab1Instance = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: years,
+                        datasets: [
+                            {
+                                label: 'Nilai FOB (Juta US$)',
+                                data: annualSummary.fob,
+                                type: 'line',
+                                borderColor: colors.copper,
+                                backgroundColor: colors.copper,
+                                borderWidth: 3,
+                                pointRadius: 5,
+                                pointHoverRadius: 7,
+                                yAxisID: 'y1',
+                                tension: 0.2
+                            },
+                            {
+                                label: 'Volume Ekspor (Ton)',
+                                data: annualSummary.vol,
+                                backgroundColor: 'rgba(27, 94, 32, 0.85)',
+                                hoverBackgroundColor: colors.forest,
+                                borderRadius: 4,
+                                yAxisID: 'y'
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        interaction: { mode: 'index', intersect: false },
+                        plugins: {
+                            legend: {
+                                labels: { font: { family: 'IBM Plex Mono', size: 12 } }
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(ctx) {
+                                        if (ctx.dataset.yAxisID === 'y') {
+                                            return ` Volume: ${ctx.raw.toLocaleString('id-ID')} Ton`;
+                                        } else {
+                                            return ` Nilai FOB: US$ ${ctx.raw.toLocaleString('id-ID')} Juta`;
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            x: { grid: { display: false }, ticks: { font: { family: 'IBM Plex Mono' } } },
+                            y: {
+                                type: 'linear', position: 'left',
+                                title: { display: true, text: 'Volume (Ton)', font: { family: 'IBM Plex Mono', size: 11 } },
+                                grid: { color: 'rgba(0,0,0,0.05)' },
+                                ticks: { font: { family: 'IBM Plex Mono' } }
+                            },
+                            y1: {
+                                type: 'linear', position: 'right',
+                                title: { display: true, text: 'Nilai FOB (Juta US$)', font: { family: 'IBM Plex Mono', size: 11 } },
+                                grid: { drawOnChartArea: false },
+                                ticks: { font: { family: 'IBM Plex Mono' } }
+                            }
+                        }
+                    }
+                });
+            } else {
+                // Price per Ton chart
+                chartTab1Instance = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: years,
+                        datasets: [{
+                            label: 'Harga Satuan Tersirat (US$/Ton)',
+                            data: annualSummary.price,
+                            borderColor: colors.copper,
+                            backgroundColor: 'rgba(194, 89, 10, 0.15)',
+                            fill: true,
+                            borderWidth: 3,
+                            pointRadius: 6,
+                            pointBackgroundColor: colors.copper,
+                            tension: 0.25
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { labels: { font: { family: 'IBM Plex Mono' } } },
+                            tooltip: {
+                                callbacks: {
+                                    label: (ctx) => ` Harga: US$ ${ctx.raw.toLocaleString('id-ID')}/Ton`
+                                }
+                            }
+                        },
+                        scales: {
+                            x: { grid: { display: false }, ticks: { font: { family: 'IBM Plex Mono' } } },
+                            y: {
+                                title: { display: true, text: 'US$ / Ton', font: { family: 'IBM Plex Mono' } },
+                                grid: { color: 'rgba(0,0,0,0.05)' },
+                                ticks: { font: { family: 'IBM Plex Mono' } }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        function setTab1Metric(mode) {
+            const btnCombo = document.getElementById('btn-t1-combo');
+            const btnPrice = document.getElementById('btn-t1-price');
+            if (mode === 'combo') {
+                btnCombo.className = "px-3 py-1.5 text-xs font-mono font-semibold bg-forest text-white rounded-l border border-forest";
+                btnPrice.className = "px-3 py-1.5 text-xs font-mono font-semibold bg-white text-ink rounded-r border border-gray-300 hover:bg-gray-100";
+            } else {
+                btnPrice.className = "px-3 py-1.5 text-xs font-mono font-semibold bg-forest text-white rounded-r border border-forest";
+                btnCombo.className = "px-3 py-1.5 text-xs font-mono font-semibold bg-white text-ink rounded-l border border-gray-300 hover:bg-gray-100";
+            }
+            renderChartTab1(mode);
+        }
+
+        // === TAB 2: STACKED BAR CHARTS ===
+        function renderChartTab2(metric) {
+            const ctx = document.getElementById('chartTab2').getContext('2d');
+            if (chartTab2Instance) chartTab2Instance.destroy();
+
+            // Prepare stacked dataset for Top 5 countries + Korea + Others
+            const top5AndKor = rawCountries.slice(0, 6);
+            const othersTon = years.map((_, yIdx) => {
+                return rawCountries.slice(6).reduce((acc, c) => acc + c.ton[yIdx], 0);
+            });
+            const othersFob = years.map((_, yIdx) => {
+                return rawCountries.slice(6).reduce((acc, c) => acc + c.fob[yIdx], 0);
+            });
+
+            let datasets = [];
+
+            if (metric === 'vol') {
+                datasets = top5AndKor.map((c, i) => ({
+                    label: c.name,
+                    data: c.ton,
+                    backgroundColor: countryColors[i]
+                }));
+                datasets.push({
+                    label: 'Negara Lainnya',
+                    data: othersTon,
+                    backgroundColor: countryColors[6]
+                });
+            } else if (metric === 'fob') {
+                datasets = top5AndKor.map((c, i) => ({
+                    label: c.name,
+                    data: c.fob,
+                    backgroundColor: countryColors[i]
+                }));
+                datasets.push({
+                    label: 'Negara Lainnya',
+                    data: othersFob,
+                    backgroundColor: countryColors[6]
+                });
+            } else if (metric === 'pct') {
+                // Percentages calculation
+                datasets = top5AndKor.map((c, i) => {
+                    const pctData = c.ton.map((v, yIdx) => {
+                        const total = annualSummary.vol[yIdx];
+                        return total ? (v / total * 100) : 0;
+                    });
+                    return {
+                        label: c.name,
+                        data: pctData,
+                        backgroundColor: countryColors[i]
+                    };
+                });
+                const othersPct = othersTon.map((v, yIdx) => {
+                    const total = annualSummary.vol[yIdx];
+                    return total ? (v / total * 100) : 0;
+                });
+                datasets.push({
+                    label: 'Negara Lainnya',
+                    data: othersPct,
+                    backgroundColor: countryColors[6]
+                });
+            }
+
+            chartTab2Instance = new Chart(ctx, {
+                type: 'bar',
+                data: { labels: years, datasets: datasets },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: { font: { family: 'IBM Plex Mono', size: 11 }, boxWidth: 12 }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(ctx) {
+                                    const val = ctx.raw;
+                                    if (metric === 'vol') return ` ${ctx.dataset.label}: ${val.toLocaleString('id-ID', {maximumFractionDigits:1})} Ton`;
+                                    if (metric === 'fob') return ` ${ctx.dataset.label}: US$ ${val.toLocaleString('id-ID', {maximumFractionDigits:2})} Juta`;
+                                    if (metric === 'pct') return ` ${ctx.dataset.label}: ${val.toFixed(2)}%`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: { stacked: true, grid: { display: false }, ticks: { font: { family: 'IBM Plex Mono' } } },
+                        y: {
+                            stacked: true,
+                            max: metric === 'pct' ? 100 : undefined,
+                            title: {
+                                display: true,
+                                text: metric === 'vol' ? 'Volume (Ton)' : (metric === 'fob' ? 'Nilai FOB (Juta US$)' : 'Pangsa (%)'),
+                                font: { family: 'IBM Plex Mono', size: 11 }
+                            },
+                            grid: { color: 'rgba(0,0,0,0.05)' },
+                            ticks: { font: { family: 'IBM Plex Mono' } }
+                        }
+                    }
+                }
+            });
+        }
+
+        function setTab2Metric(metric) {
+            const btnVol = document.getElementById('btn-t2-vol');
+            const btnFob = document.getElementById('btn-t2-fob');
+            const btnPct = document.getElementById('btn-t2-pct');
+
+            [btnVol, btnFob, btnPct].forEach(b => {
+                b.className = "px-3 py-1.5 text-xs font-mono font-semibold bg-white text-ink border border-gray-300 hover:bg-gray-100";
+            });
+
+            if (metric === 'vol') btnVol.className = "px-3 py-1.5 text-xs font-mono font-semibold bg-forest text-white rounded-l border border-forest";
+            if (metric === 'fob') btnFob.className = "px-3 py-1.5 text-xs font-mono font-semibold bg-forest text-white border border-forest";
+            if (metric === 'pct') btnPct.className = "px-3 py-1.5 text-xs font-mono font-semibold bg-forest text-white rounded-r border border-forest";
+
+            renderChartTab2(metric);
+        }
+
+        // === TAB 3: HORIZONTAL BAR & TABLE ===
+        function renderChartTab3() {
+            const ctx = document.getElementById('chartTab3').getContext('2d');
+            if (chartTab3Instance) chartTab3Instance.destroy();
+
+            // Sorted by total volume
+            const sorted = [...rawCountries].sort((a, b) => b.totalTon - a.totalTon);
+            const labels = sorted.map(c => c.name);
+            const dataVol = sorted.map(c => c.totalTon);
+
+            chartTab3Instance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Volume Kumulatif (Ton)',
+                        data: dataVol,
+                        backgroundColor: sorted.map((_, i) => i < 5 ? colors.forest : colors.copper),
+                        borderRadius: 3
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: (ctx) => ` Total Volume: ${ctx.raw.toLocaleString('id-ID')} Ton`
+                            }
+                        }
+                    },
+                    scales: {
+                        x: { grid: { color: 'rgba(0,0,0,0.05)' }, ticks: { font: { family: 'IBM Plex Mono', size: 10 } } },
+                        y: { grid: { display: false }, ticks: { font: { family: 'IBM Plex Mono', size: 10 } } }
+                    }
+                }
+            });
+        }
+
+        function populateTable() {
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = '';
+
+            const sorted = [...rawCountries].sort((a, b) => b.totalTon - a.totalTon);
+            
+            sorted.forEach((c, idx) => {
+                const ton2025 = c.ton[9];
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-forestSubtle transition-colors";
+                tr.innerHTML = `
+                    <td class="p-2 font-semibold text-gray-400">${idx + 1}</td>
+                    <td class="p-2 font-semibold text-ink">${c.name} <span class="text-[10px] text-muted">(${c.code})</span></td>
+                    <td class="p-2 text-right font-bold text-forest">${c.totalTon.toLocaleString('id-ID', {maximumFractionDigits: 1})}</td>
+                    <td class="p-2 text-right text-copper font-semibold">${c.totalFob.toLocaleString('id-ID', {maximumFractionDigits: 2})}</td>
+                    <td class="p-2 text-right">${c.avgPrice.toLocaleString('id-ID')}</td>
+                    <td class="p-2 text-right font-bold ${ton2025 > 0 ? 'text-forest' : 'text-gray-400'}">${ton2025 ? ton2025.toLocaleString('id-ID', {maximumFractionDigits:1}) : '-'}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Table Search Filter
+        function filterTable() {
+            const input = document.getElementById('tableSearch').value.toLowerCase();
+            const rows = document.querySelectorAll('#tableBody tr');
+            rows.forEach(row => {
+                const text = row.innerText.toLowerCase();
+                row.style.display = text.includes(input) ? '' : 'none';
+            });
+        }
+
+        // Table Sort Logic
+        let sortDirection = false; // false = desc, true = asc
+        function sortTable(colIdx) {
+            sortDirection = !sortDirection;
+            const rows = Array.from(document.querySelectorAll('#tableBody tr'));
+            
+            rows.sort((a, b) => {
+                let valA = a.children[colIdx].innerText.replace(/[^0-9.-]+/g,"");
+                let valB = b.children[colIdx].innerText.replace(/[^0-9.-]+/g,"");
+                
+                if (colIdx === 1) { // Country name
+                    valA = a.children[1].innerText;
+                    valB = b.children[1].innerText;
+                    return sortDirection ? valA.localeCompare(valB) : valB.localeCompare(valA);
+                }
+
+                valA = parseFloat(valA) || 0;
+                valB = parseFloat(valB) || 0;
+                return sortDirection ? valA - valB : valB - valA;
+            });
+
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = '';
+            rows.forEach(r => tbody.appendChild(r));
+        }
+
+        // === INITIALIZATION ===
+        window.onload = function() {
+            animateCounters();
+            renderChartTab1('combo');
+        };
+    </script>
+</body>
+</html>
